@@ -1,0 +1,144 @@
+{% extends 'main/base.html' %}
+  {% if user.is_authenticated %}
+    {% block body %}
+        <div class="page-heading header-text">
+            <div class="container">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h3>{{ cart_info.title1 }}</h3>
+                  <span class="breadcrumb"><a href="#">Home</a> > {{ cart_info.title1 }}</span>
+                </div>
+              </div>
+            </div>
+        </div>
+        <style>
+            .cart-container {
+              max-width: 800px;
+              margin: 20px auto;
+              background-color: #FFFFFF;
+              padding: 20px;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            h1 {
+              color: #0171F9;
+              text-align: center;
+            }
+            
+            .cart-items {
+              margin-top: 20px;
+            }
+            
+            .item {
+              display: flex;
+              align-items: center;
+              margin-bottom: 20px;
+            }
+            
+            .item img {
+              object-fit: cover;
+              margin-right: 20px;
+            }
+            
+            .item-details h3 {
+              margin: 0;
+            }
+            
+            .item-details p {
+              margin: 5px 0;
+                font-size: 20px;
+            }
+            
+            .remove-btn {
+              background-color: #0171F9;
+              color: #FFFFFF;
+              border: none;
+              padding: 5px 10px;
+              cursor: pointer;
+            }
+            
+            .cart-total {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-top: 20px;
+            }
+            
+            .checkout-btn {
+              background-color: #EE626B;
+              color: #FFFFFF;
+              border: none;
+              padding: 10px 20px;
+              cursor: pointer;
+            }
+            .for_guest_container {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+            }
+
+            .for_guest_container div {
+              display: flex;
+              justify-content: space-between;
+              width: 250px;
+            }
+          
+            .for_guest_container a button {
+              background-color: #EE626B;
+              color: #fff;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 3px;
+              cursor: pointer;
+            }
+
+        </style>
+        {% if items %}
+          <div class="cart-container">
+        {% else %}
+          <div style="height: 179px;" class="cart-container">
+        {% endif %}
+          {% if user.is_authenticated %}
+            <h1>{{ cart_info.title2 }}</h1>
+            <div class="cart-items">
+                {% for i in items %}
+                    <div class="item">
+                      <img style="width: 140px; height: 130px;" src="{{ i.product.img.url }}" alt="Product 1">
+                      <div class="item-details">
+                        <h3>{{ i.product.name }}</h3>
+                        {% if i.product.to_check %}
+                            <p>${{ i.product.new_price }}</p>
+                        {% else %}
+                            <p>${{ i.product.price }}</p>
+                        {% endif %}
+                        <p>{{ cart_info.count_title }}: {{ i.count1 }}</p>
+                        <form method="post" action="{% url 'cart_product' %}">
+                          <input type="number" max="{{ i.count1 }}" min="1" placeholder="count" name="count">
+                          {% csrf_token %}
+                          <a href="{% url 'cart_product' %}"><button name="id" value="{{ i.product.id }}" class="remove-btn">{{ cart_info.del_btn }}</button></a>
+                        </form>
+                      </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <form action="{% url 'cart_all_product' %}" method="post">
+              {% csrf_token %}
+              <div class="cart-total">
+                <p>{{ cart_info.price_title }}: ${{ cart_list_sum }}</p>
+                <button style="position: relative; top: 44px;" name="all_product" class="checkout-btn" value="Checkout">{{ cart_info.btn_name1 }}</button>
+              </div>
+              <button name="all_product" style="background-color: #0171F9;" class="checkout-btn" value="Remove">{{ cart_info.btn_name2 }}</button>
+            </form>
+          {% else %}
+            <div class="for_guest_container">
+              <h1 style="margin: 50px;">{{ for_guest_user.text }}</h1>
+              <div>
+                <a href="{% url 'login' %}"><button>{{ for_guest_user.btn_name1 }}</button></a>
+                <a href="{% url 'register' %}"><button>{{ for_guest_user.btn_name2 }}</button></a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+    {% endblock %}
+  {% endif %}

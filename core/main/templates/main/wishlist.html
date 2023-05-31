@@ -1,0 +1,185 @@
+{% extends 'main/base.html' %}
+    {% block body %}
+    <div class="page-heading header-text">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <h3>{{ wishlist_info.title1 }}</h3>
+              <span class="breadcrumb"><a href="#">Home</a> > {{ wishlist_info.title1 }}</span>
+            </div>
+          </div>
+        </div>
+    </div>
+    <style>
+
+        .wishlist {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr; /* Two columns */
+          grid-gap: 10px; /* Gap between grid items */
+          padding: 20px;
+          margin: 20px;
+        } 
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .wishlist-item {
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .wishlist-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .wishlist-item h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .wishlist-item p {
+      margin-top: 10px;
+      font-size: 20px;
+      color: #018BFA;
+      flex-grow: 1;
+      font-weight: bolder;
+    }
+
+    .wishlist-item button:first-child {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .wishlist-item button:first-child:hover {
+      background-color: #555;
+    }
+
+    p span {
+      font-size: 15px;
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .second_container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .for_guest_container {
+      height: 199px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .for_guest_container div {
+      display: flex;
+      justify-content: space-between;
+      width: 250px;
+    }
+
+    .for_guest_container a button {
+      background-color: #EE626B;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .delete-button {
+      background-color: #ff4d4d;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 20px 0;
+      width: 100%;
+    }
+
+    .delete-button:hover {
+      background-color: #ff3333;
+    }
+
+    .delete-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.4);
+    }
+
+    .delete-button:active {
+      background-color: #e60000;
+    }
+
+    @media screen and (max-width: 1100px) {
+      .wishlist {
+          display: grid;
+          grid-template-columns: 1fr 1fr; /* Two columns */
+         
+        } 
+      .add_btn {
+          width: 100px;
+          height: 60px;
+      }
+    }
+    
+
+
+    </style>
+      {% if user.is_authenticated %}
+        {% if items %}
+          <div class="wishlist">
+        {% else %}
+          <div style="height: 179px;" class="wishlist">
+        {% endif %}
+            {% for i in items %}
+                <div class="wishlist-item">
+                  <div class="image">
+                    <img src="{{ i.products.img.url }}" alt="Product 1">
+                  </div>
+                  <h2>{{ i.products.name }}</h2>
+                  <div class="second_container">
+
+                    {% if i.products.to_check %}
+                    <p class="price"><span>${{ i.products.price }}</span> ${{ i.products.new_price }}</p>
+                    {% else %}
+                    <p class="price">${{ i.products.price }}</p>
+                    {% endif %}
+                    <a href="{% url 'product_detail' i.products.slug %}"><button class="add_btn">{{ wishlist_info.cart_btn }}</button></a>
+                  </div>
+                  <form action="{% url 'wishlist_product' %}" method="post">
+                      {% csrf_token %}
+                      <button name="id" value="{{ i.products.id }}" class="delete-button">{{ wishlist_info.del_btn }}</button>
+                  </form>
+                </div>
+            {% endfor %}
+        {% else %}
+          <div class="for_guest_container">
+            <h1 style="margin: 50px;">{{ for_guest_user.text }}</h1>
+            <div>
+              <a href="{% url 'login' %}"><button>{{ for_guest_user.btn_name1 }}</button></a>
+              <a href="{% url 'register' %}"><button>{{ for_guest_user.btn_name2 }}</button></a>
+            </div>
+          </div>
+        {% endif %}
+        </div>
+        
+    {% endblock %}

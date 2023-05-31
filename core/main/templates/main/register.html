@@ -1,0 +1,55 @@
+{% extends 'main/base.html' %}
+    {% block body %}
+        <div class="page-heading header-text">
+            <div class="container">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h3>{{ sign_up.title }}</h3>
+                  <span class="breadcrumb"><a href="#">Home</a> > {{ sign_up.title }}</span>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="login_container">
+            <h1>{{ sign_up.title }}</h1>
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="first_name">{{ sign_up.subtitle1 }}:</label>
+                <input type="text" id="first_name" name="first_name" placeholder="Enter your name">
+              </div>
+              <div class="form-group">
+                <label for="last_name">{{ sign_up.subtitle2 }}:</label>
+                <input type="text" id="last_name" name="last_name" placeholder="Enter your surname">
+              </div>
+
+              <div class="form-group">
+                <label for="username">{{ sign_up.subtitle3 }}:</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username">
+              </div>
+              <div class="form-group">
+                <label for="email">{{ sign_up.subtitle4 }}:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email">
+              </div>
+          
+              <div class="form-group">
+                <label for="password">{{ sign_up.subtitle5 }}:</label>
+                <input type="password" id="password" name="password1" placeholder="Enter your password">
+              </div>
+              <div class="form-group">
+                <label for="password">{{ sign_up.subtitle6 }}:</label>
+                <input type="password" id="password" name="password2" placeholder="Confirm your password">
+              </div>
+              <div style="height: 100px;">
+                {{ form.captcha.as_widget }}
+              </div>
+              <div class="form-group">
+                <button type="submit">{{ sign_up.btn_name }}</button>
+              </div>
+              <div class="form-group">
+                <p>{{ sign_up.text }} <a style="color: red;" href="{% url 'login' %}">{{ sign_up.link_name }}</a></p>
+              </div>
+            </form>
+            <p><hr>{{ sign_up.rule1 }}<br><hr>{{ sign_up.rule2 }}<br><hr>{{ sign_up.rule3 }}<br><hr>{{ sign_up.rule4 }}<br><hr>{{ sign_up.rule5 }}<hr></p>
+        </div>
+    {% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'main/base.html' %}
+  {% block body %}
+    <div class="page-heading header-text">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h3>{{ shop_title.title }}</h3>
+            <span class="breadcrumb"><a href="#">Home</a> > {{ shop_title.subtitle }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section trending">
+      <div class="container">
+        <ul class="trending-filter">
+          <li>
+            <a class="is_active" href="#!" data-filter="*">All</a>
+          </li>
+          {% for i in shop_content_genre %}
+            <li>
+              <a href="#!" data-filter=".{{ i.tag }}">{{ i.genre }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="row trending-box">
+          {% for i in shop_content %}
+            <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 {{ i.category.tag }}">
+              <div class="item">
+                <div class="thumb">
+                  <a href="{% url 'product_detail' i.slug %}"><img src="{{ i.img.url }}" alt=""></a>
+                  {% if i.to_check %}
+                    <span class="price"><em>${{ i.price }}</em>${{ i.new_price }}</span>
+                  {% else %}
+                    <span class="price">${{ i.price }}</span>
+                  {% endif %}
+                </div>
+                <div class="down-content">
+                  <span class="category">{{ i.category.genre }}</span>
+                  <h4>{{ i.name }}</h4>
+                  <a href="{% url 'product_detail' i.slug %}"><i class="fa fa-shopping-bag"></i></a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endblock %}

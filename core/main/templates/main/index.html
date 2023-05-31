@@ -1,0 +1,184 @@
+{% extends 'main/base.html' %}
+{% block title %}Home{% endblock %}
+  {% block body %}
+    <div class="main-banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 align-self-center">
+            <div class="caption header-text">
+              <h6>{{ home_page.title }}</h6>
+              <h2>{{ home_page.subtitle }}</h2>
+              <p>{{ home_page.text }}</p>
+              <!-- <div class="search-input">
+                <form id="search" action="#">
+                  <input type="text" placeholder="Type Something" id='searchText' name="searchKeyword" onkeypress="handle" />
+                  <button role="button">{{ home_page.btn_name }}</button>
+                </form>
+              </div> -->
+            </div>
+          </div>
+          <div class="col-lg-4 offset-lg-2">
+            <div class="right-image">
+              <img src="{{ home_page.img.url }}" alt="">
+              <span class="price">{{ home_page.price }}</span>
+              <span class="offer">{{ home_page.procent }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="container">
+        <div class="row">
+          {% for i in home_page_content %}
+            <div class="col-lg-3 col-md-6">
+              <a href="#">
+                <div class="item">
+                  <div class="image">
+                    <img src="{{ i.img.url }}" alt="" style="max-width: 44px;">
+                  </div>
+                  <h4>{{ i.title }}</h4>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="section trending">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="section-heading">
+              <h6>{{ trending_games.title }}</h6>
+              <h2>{{ trending_games.subtitle }}</h2>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="main-button">
+              <a href="{% url 'shop' %}">{{ trending_games.btn_name }}</a>
+            </div>
+          </div>
+          {% for j in trending_games_content %}
+              <div class="col-lg-3 col-md-6">
+                <div class="item">
+                  <div class="thumb">
+                    <a href="{% url 'product_detail' j.trending_game.slug %}"><img src="{{ j.trending_game.img.url }}" alt=""></a>
+                    {% if j.trending_game.to_check %}
+                      <span class="price"><em>${{ j.trending_game.price }}</em>${{ j.trending_game.new_price }}</span>
+                    {% else %}
+                      <span class="price">${{ j.trending_game.price }}</span>
+                    {% endif %}
+                  </div>
+                  <div class="down-content">
+                    <span class="category">{{ j.trending_game.category.genre }}</span>
+                    <h4>{{ j.trending_game.name }}</h4>
+                    <a href="{% url 'product_detail' j.trending_game.slug %}"><i class="{{ trending_games.icon }}"></i></a>
+                  </div>
+                </div>
+              </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="section most-played">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="section-heading">
+              <h6>{{ top_games.title }}</h6>
+              <h2>{{ top_games.subtitle }}</h2>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="main-button">
+              <a href="{% url 'shop' %}">{{ top_games.btn_name1 }}</a>
+            </div>
+          </div>
+          {% for i in top_games_content %}
+            <div class="col-lg-2 col-md-6 col-sm-6">
+              <div class="item">
+                <div class="thumb">
+                  <a href="{% url 'product_detail' i.top_games.slug %}"><img src="{{ i.top_games.img.url }}" alt=""></a>
+                </div>
+                <div class="down-content">
+                    <span class="category">{{ i.top_games.category.genre }}</span>
+                    <h4>{{ i.top_games.name }}</h4>
+                    <a href="{% url 'product_detail' i.top_games.slug %}">{{ top_games.btn_name2 }}</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="section categories">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <div class="section-heading">
+              <h6>{{ top_categories.title }}</h6>
+              <h2>{{ top_categories.subtitle }}</h2>
+            </div>
+          </div>
+          {% for i in top_categories_content %}
+            <div class="col-lg col-sm-6 col-xs-12">
+              <div class="item">
+                <h4>{{ i.genre }}</h4>
+                <div class="thumb">
+                  <a href="{% url 'shop' %}"><img src="{{ i.img.url }}" alt=""></a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="section cta">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-5">
+            <div class="shop">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="section-heading">
+                    <h6>{{ home_page_last_get.title1 }}</h6>
+                    <h2>{{ home_page_last_get.subtitle1 }} <em>{{ home_page_last_get.colored_word1 }}</em></h2>
+                  </div>
+                  <p>{{ home_page_last_get.text }}</p>
+                  <div class="main-button">
+                    <a href="{% url 'shop' %}">{{ home_page_last_get.btn_name1 }}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5 offset-lg-2 align-self-end">
+            <div class="subscribe">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="section-heading">
+                    <h6>{{ home_page_last_get.title2 }}</h6>
+                    <h2>{{ home_page_last_get.subtitle2 }} <em>{{ home_page_last_get.colored_word2 }}</em></h2>
+                  </div>
+                  <div class="search-input">
+                    <form id="subscribe" method="post">
+                      {% csrf_token %}
+                      <input>
+                      <button type="submit">{{ home_page_last_get.btn_name2 }}</button>
+                      <input name="user_email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your email...">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}

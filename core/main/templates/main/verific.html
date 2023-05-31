@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+    {% block body %}
+        <div class="page-heading header-text">
+            <div class="container">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h3>{{ verific.title1 }}</h3>
+                  <span class="breadcrumb"><a href="#">Home</a> > {{ verific.title1 }}</span>
+                </div>
+              </div>
+            </div>
+        </div>
+        <style>
+            .verific_container {
+                margin: 50px auto;
+                max-width: 800px;
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+
+            img {
+                width: 400px;
+            }
+
+            h1 {
+                color: #333333;
+            }
+
+            p {
+                color: #777777;
+                margin-bottom: 20px;
+            }
+
+        </style>
+        <div class="verific_container">
+            <img src="{{ verific.img.url }}" alt="">
+            <h1>{{ verific.title2 }}</h1>
+            <p>{{ verific.text }}</p>
+            
+        </div>
+    {% endblock %}

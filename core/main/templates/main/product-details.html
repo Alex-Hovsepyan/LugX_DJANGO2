@@ -1,0 +1,208 @@
+{% extends 'main/base.html' %}
+  {% block body %}
+  <style>
+    .review_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+        width: max-content;
+    }
+
+    .big-input {
+        width: 400px;
+        height: 100px;
+        padding: 20px;
+        font-size: 18px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        resize: none;
+        margin-bottom: 20px;
+    }
+
+    .submit-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #6cb2eb;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #5a9ae6;
+    }
+
+    .for_guest_container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+    .for_guest_container h1 {
+      margin: 20px 0 30px;
+    }
+
+    .for_guest_container div {
+      display: flex;
+      justify-content: space-between;
+      width: 250px;
+    }
+  
+    .for_guest_container a button {
+      background-color: #EE626B;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+</style>
+    <div class="page-heading header-text">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h3>{{ one_game.name }}</h3>
+            <span class="breadcrumb"><a href="#">Home</a>  >  <a href="#">Shop</a>  >  {{ one_game.name }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="single-product section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="left-image">
+              <img src="{{ one_game.img.url }}" alt="">
+            </div>
+          </div>
+          <div class="col-lg-6 align-self-center">
+            <div style="display: flex; justify-content: space-between; flex-direction: row; align-items: center;">
+              <h4 style="margin: 0;">{{ one_game.name }}</h4>
+              {% if one_game.to_check %}
+                <p style="font-size: 20px; color: #007CF8; font-weight: bolder;" class="price"><span style="color: #888888; font-size: 15px; text-decoration: line-through;">${{ one_game.price }}</span> ${{ one_game.new_price }}</p>
+              {% else %}
+                <p style="font-size: 20px; margin: 0; color: #007CF8; font-weight: bolder;" class="price">${{ one_game.price }}</p>
+              {% endif %}
+            </div>
+            
+            <p>{{ one_game.text }}</p>
+            <div style="display: flex; justify-content: space-between; width: 400px;">
+              <form style="display: flex;" id="qty" action="{% url 'add_to_cart' %}" method="post" >
+                {% csrf_token %}
+                <input max="20" name="amount" type="number" min="1" class="form-control" id="1" aria-describedby="quantity" placeholder="1" value="1">
+                <button style="background-color: #007CF8;" class="cart_add" name="id" value="{{ one_game.id }}" type="submit"><i class="fa fa-shopping-bag"></i> {{ product_detail_info.cart_btn }}</button>
+              </form>
+              <form id="qty" action="{% url 'add_to_wishlist' %}" method="post">
+                {% csrf_token %}
+                <button name="id" value="{{ one_game.id }}" type="submit"><i class="fa fa-shopping-bag"></i> {{ product_detail_info.wish_btn }}</button>
+              </form>
+            </div>
+            <ul>
+              <li><span>{{ product_detail_info.subtitle1 }}:</span><a href="#">{{ one_game.category.genre }}</a></li>
+              <li><span>{{ product_detail_info.subtitle2 }}:</span>{% for i in one_game.tags.split %}<a href="#">{{ i }}</a> {% endfor %}</li>
+              {% if user.is_authenticated %}
+                <form action="{% url 'product_review' %}" method="post">
+                  {% csrf_token %}
+                  <div class="review_container">
+                    <textarea name="game_review_text" class="big-input" placeholder="Write Your Opinion About This Game..."></textarea>
+                    <button name="game_product" value="{{ one_game.id }}" class="submit-button">{{ product_detail_info.review_btn }}</button>
+                  </div>
+                </form>
+              {% else %}
+                <div class="for_guest_container">
+                  <h1>{{ for_guest_user.text }}</h1>
+                  <div>
+                    <a href="{% url 'login' %}"><button>{{ for_guest_user.btn_name1 }}</button></a>
+                    <a href="{% url 'register' %}"><button>{{ for_guest_user.btn_name2 }}</button></a>
+                  </div>
+                </div>
+              {% endif %}
+            </ul>
+          </div>
+          <div class="col-lg-12">
+            <div class="sep"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="more-info">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="tabs-content">
+              <div class="row">
+                <div class="nav-wrapper ">
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Last Reviews ({{ one_game.reviews.count }})</button>
+                    </li>
+                  </ul>
+                </div>              
+                <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                    <p>{{ one_game.description }}</p>
+                    
+                  </div>
+                  <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                    {% for i in one_game.reviews.all reversed %}
+                      {% if forloop.counter > 5 %}
+                      {% else %}
+                        {% if i.to_check %}
+                          <strong><p> {{ i.user_review.first_name }} {{ i.user_review.last_name }} - <em style="color: #007CF8;">{{ i.review_date }}</em></p></strong>
+                          <p>{{ i.user_text }}</p>
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section categories related-games">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="section-heading">
+              <h6>{{ one_game.category.genre }}</h6>
+              <h2>{{ product_detail_info.subtitle3 }}</h2>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="main-button">
+              <a href="{% url 'shop' %}">{{ product_detail_info.btn_name }}</a>
+            </div>
+          </div>
+          {% for i in one_game.category.cat_prod.all %}
+            {% if forloop.counter > 6 %}
+            {% else %}
+              {% if one_game.slug == i.slug %}
+
+              {% else %}
+                <div class="col-lg col-sm-6 col-xs-12">
+                  <div class="item">
+                    <h4>{{ one_game.category.genre }}</h4>
+                    <div class="thumb">
+                      <a href="{% url 'product_detail' i.slug %}"><img src="{{ i.img.url }}" alt=""></a>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endblock %}
